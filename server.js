@@ -14,7 +14,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://cs_db_user_astroone:UYHduAyI8gmbnlsr@cluster0.5udxir4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/saas_app')
   .then(() => console.log('✓ MongoDB Connected'))
   .catch(err => {
     console.error('MongoDB Error:', err);
