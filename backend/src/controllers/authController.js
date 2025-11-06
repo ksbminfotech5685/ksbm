@@ -60,4 +60,64 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ error: '
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = generateToken(user._id);
+
+    res.json({ 
+      success: true, 
+      token, 
+      user: { 
+        id: user._id, 
+        email: user.email,
+        firstName: user.firstName 
+      } 
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// ADMIN LOGIN ← THIS WAS MISSING!
+exports.adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+
+    const admin = await AdminUser.findOne({ email });
+    if (!admin) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const isMatch = await admin.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = generateToken(admin._id);
+
+    res.json({
+      success: true,
+      token,
+      admin: {
+        id: admin._id,
+        email: admin.email,
+        name: admin.name,
+        role: admin.role
+      }
+    });
+  } catch (error) {
+    console.error('Admin login error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
