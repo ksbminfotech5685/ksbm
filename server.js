@@ -21,7 +21,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/saas_app')
     process.exit(1);
   });
 
-// API Routes
+// ==================== API ROUTES ====================
 app.use('/api/auth', require('./backend/src/routes/authRoutes'));
 app.use('/api/user', require('./backend/src/routes/userRoutes'));
 app.use('/api/social', require('./backend/src/routes/socialRoutes'));
@@ -29,21 +29,29 @@ app.use('/api/payment', require('./backend/src/routes/paymentRoutes'));
 app.use('/api/plans', require('./backend/src/routes/planRoutes'));
 app.use('/api/admin', require('./backend/src/routes/adminRoutes'));
 
-// Serve static frontend
+// ==================== STATIC FILES ====================
+// Serve public folder (static HTML/React)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Catch all - serve index.html
+// ==================== CATCH-ALL ROUTE ====================
+// For React Router - serve index.html for all non-API routes
 app.get('*', (req, res) => {
+  // If not an API route, serve the React app
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Error Handler
+// ==================== ERROR HANDLING ====================
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(err.status || 500).json({ error: err.message });
 });
 
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📱 Frontend: http://localhost:${PORT}`);
+  console.log(`🔌 API: http://localhost:${PORT}/api`);
 });
+
+module.exports = app;
