@@ -1,3 +1,8 @@
+"scripts": {
+  "start": "node server.js",
+  "dev": "nodemon server.js",
+  "create-admin": "node backend/scripts/createAdmin.js"
+}
 {
   "name": "saas-app",
   "version": "1.0.0",
